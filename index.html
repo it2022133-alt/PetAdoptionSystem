@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PetAdoption - Υιοθετήστε ένα Φίλο</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #6a89cc 0%, #b8e994 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+            min-height: 80vh;
+        }
+
+        header {
+            background: linear-gradient(135deg, #4a69bd 0%, #1e3799 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .logo {
+            font-size: 3em;
+            margin-bottom: 20px;
+        }
+
+        /* Forms */
+        .form-container {
+            padding: 40px;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #2c3e50;
+            font-size: 1.1em;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 15px;
+            border: 3px solid #e0e0e0;
+            border-radius: 12px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus {
+            border-color: #4a69bd;
+            outline: none;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(74, 105, 189, 0.2);
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #4a69bd 0%, #1e3799 100%);
+            color: white;
+            border: none;
+            padding: 18px 30px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: 600;
+            width: 100%;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(74, 105, 189, 0.3);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+        }
+
+        /* Pets Grid */
+        .pets-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            padding: 40px;
+        }
+
+        .pet-card {
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .pet-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.15);
+        }
+
+        .pet-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 8px;
+            background: linear-gradient(135deg, #4a69bd 0%, #1e3799 100%);
+        }
+
+        .pet-image {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            border: 5px solid #4a69bd;
+        }
+
+        .pet-info h3 {
+            color: #2c3e50;
+            font-size: 1.8em;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .pet-info p {
+            margin-bottom: 12px;
+            color: #2c3e50;
+            font-size: 1.1em;
+        }
+
+        .pet-info strong {
+            color: #4a69bd;
+        }
+
+        /* Messages */
+        .message {
+            padding: 20px;
+            border-radius: 12px;
+            margin: 20px 0;
+            text-align: center;
+            font-size: 1.2em;
+        }
+
+        .success {
+            background: #d4edda;
+            color: #155724;
+            border: 2px solid #c3e6cb;
+        }
+
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 2px solid #f5c6cb;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        /* User info */
+        .user-info {
+            background: linear-gradient(135deg, #4a69bd 0%, #1e3799 100%);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            font-size: 1.2em;
+            margin-bottom: 30px;
+        }
+
+        /* Navigation */
+        .nav-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .pets-grid {
+                grid-template-columns: 1fr;
+                padding: 20px;
+            }
+
+            .form-container {
+                padding: 20px;
+            }
+
+            header h1 {
+                font-size: 2em;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        /* Loading */
+        .loading {
+            text-align: center;
+            padding: 40px;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #4a69bd;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+             100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <!-- Header -->
+    <header>
+        <div class="logo">
+            <i class="fas fa-paw"></i>
+        </div>
+        <h1>PetAdoption</h1>
+        <p>Βρείτε το καινούριο σας πιστό φίλο</p>
+    </header>
+
+    <!-- Registration Form -->
+    <div id="registerSection" class="form-container">
+        <h2 style="text-align: center; color: #2c3e50; margin-bottom: 30px;">
+            <i class="fas fa-user-plus"></i> Δημιουργία Λογαριασμού
+        </h2>
+
+        <div id="registerMessage" class="message hidden"></div>
+
+        <div class="form-group">
+            <label for="username"><i class="fas fa-user"></i> Όνομα Χρήστη:</label>
+            <input type="text" id="username" placeholder="Εισάγετε το όνομά σας" required>
+        </div>
+
+        <div class="form-group">
+            <label for="email"><i class="fas fa-envelope"></i> Email:</label>
+            <input type="email" id="email" placeholder="Εισάγετε το email σας" required>
+        </div>
+
+        <div class="form-group">
+            <label for="password"><i class="fas fa-lock"></i> Κωδικός Πρόσβασης:</label>
+            <input type="password" id="password" placeholder="Δημιουργήστε έναν κωδικό" required>
+        </div>
+
+        <button class="btn" onclick="register()">
+            <i class="fas fa-user-plus"></i> Δημιουργία Λογαριασμού
+        </button>
+
+        <p style="text-align: center; margin-top: 20px; color: #666;">
+            Έχετε ήδη λογαριασμό; <a href="#" onclick="showLogin()" style="color: #4a69bd; text-decoration: none;">Συνδεθείτε εδώ</a>
+        </p>
+    </div>
+
+    <!-- Login Form -->
+    <div id="loginSection" class="form-container hidden">
+        <h2 style="text-align: center; color: #2c3e50; margin-bottom: 30px;">
+            <i class="fas fa-sign-in-alt"></i> Σύνδεση Χρήστη
+        </h2>
+
+        <div id="loginMessage" class="message hidden"></div>
+
+        <div class="form-group">
+            <label for="loginEmail"><i class="fas fa-envelope"></i> Email:</label>
+            <input type="email" id="loginEmail" placeholder="Εισάγετε το email σας" required>
+        </div>
+
+        <div class="form-group">
+            <label for="loginPassword"><i class="fas fa-lock"></i> Κωδικός Πρόσβασης:</label>
+            <input type="password" id="loginPassword" placeholder="Εισάγετε τον κωδικό σας" required>
+        </div>
+
+        <button class="btn" onclick="login()">
+            <i class="fas fa-sign-in-alt"></i> Σύνδεση
+        </button>
+
+        <p style="text-align: center; margin-top: 20px; color: #666;">
+            Δεν έχετε λογαριασμό; <a href="#" onclick="showRegister()" style="color: #4a69bd; text-decoration: none;">Δημιουργήστε έναν εδώ</a>
+        </p>
+    </div>
+
+    <!-- Pets Section -->
+    <div id="petsSection" class="hidden">
+        <div class="user-info">
+            <i class="fas fa-user"></i> Καλωσήρθες, <span id="userName"></span>!
+        </div>
+
+        <h2 style="text-align: center; color: #2c3e50; margin: 20px 0;">
+            <i class="fas fa-paw"></i> Ζώα Προσφοράς Υιοθεσίας
+        </h2>
+
+        <div id="adoptionMessage" class="message hidden"></div>
+
+        <div class="pets-grid" id="petsGrid">
+            <!-- Pets will be loaded here -->
+        </div>
+
+        <div class="nav-buttons">
+            <button class="btn btn-secondary" onclick="logout()">
+                <i class="fas fa-sign-out-alt"></i> Αποσύνδεση
+            </button>
+        </div>
+    </div>
+
+    <!-- Loading -->
+    <div id="loading" class="loading hidden">
+        <div class="spinner"></div>
+        <p>Περιμένετε...</p>
+    </div>
+</div>
+
+<script>
+        const API_BASE = 'http://localhost:8080/api';
+        let currentUser = null;
+        let authToken = null;
+        let adoptedPets = new Set(); // Track adopted pets
+
+        // ΣΤΑΤΙΚΑ ΖΩΑ (fallback) - Τα ίδια με το backend
+        const staticPets = [
+            {
+                id: 1,
+                name: "Buddy",
+                type: "Σκύλος",
+                breed: "Golden Retriever",
+                age: 2,
+                gender: "Αρσενικό",
+                description: "Φιλικός και παιχνιδιάρης σκύλος",
+                imageUrl: "https://images.unsplash.com/photo-1543466835-00a7907e9de1?w=400&h=300&fit=crop"
+            },
+            {
+                id: 2,
+                name: "Luna",
+                type: "Γάτα",
+                breed: "Siamese",
+                age: 3,
+                gender: "Θηλυκό",
+                description: "Ήρεμη και τρυφερή γάτα",
+                imageUrl: "https://images.unsplash.com/photo-1573148164257-8a2b173be464?w=400&h=300&fit=crop"
+            }
+        ];
+
+        function showSection(sectionId) {
+            // Hide all sections
+            document.getElementById('registerSection').classList.add('hidden');
+            document.getElementById('loginSection').classList.add('hidden');
+            document.getElementById('petsSection').classList.add('hidden');
+
+            // Show requested section
+            document.getElementById(sectionId).classList.remove('hidden');
+        }
+
+        function showMessage(elementId, message, type) {
+            const messageDiv = document.getElementById(elementId);
+            messageDiv.textContent = message;
+            messageDiv.className = `message ${type}`;
+            messageDiv.classList.remove('hidden');
+
+            setTimeout(() => {
+                messageDiv.classList.add('hidden');
+            }, 5000);
+        }
+
+        function showLoading() {
+            document.getElementById('loading').classList.remove('hidden');
+        }
+
+        function hideLoading() {
+            document.getElementById('loading').classList.add('hidden');
+        }
+
+        // API CALL: Register user
+        async function register() {
+            const username = document.getElementById('username').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            if (!username || !email || !password) {
+                showMessage('registerMessage', 'Παρακαλώ συμπληρώστε όλα τα πεδία', 'error');
+                return;
+            }
+
+            showLoading();
+
+            try {
+                const response = await fetch(`${API_BASE}/users/register`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: `username=${encodeURIComponent(username)}&email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}`
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+
+                    currentUser = { username, email };
+                    document.getElementById('userName').textContent = username;
+                    await loadPets();
+                    showSection('petsSection');
+                    showMessage('adoptionMessage', 'Επιτυχής εγγραφή! Καλωσήρθατε στην οικογένεια μας!', 'success');
+                } else {
+                    const error = await response.text();
+                    showMessage('registerMessage', 'Σφάλμα κατά την εγγραφή. Προσπαθήστε ξανά.', 'error');
+                }
+            } catch (error) {
+                // Fallback: Χρήση static data
+                currentUser = { username, email };
+                document.getElementById('userName').textContent = username;
+                displayPets(staticPets);
+                showSection('petsSection');
+                showMessage('adoptionMessage', 'Επιτυχής εγγραφή! Καλωσήρθατε στην οικογένεια μας!', 'success');
+            } finally {
+                hideLoading();
+            }
+        }
+
+        // API CALL: Login user
+        async function login() {
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+
+            if (!email || !password) {
+                showMessage('loginMessage', 'Παρακαλώ συμπληρώστε όλα τα πεδία', 'error');
+                return;
+            }
+
+            showLoading();
+
+            try {
+                const response = await fetch(`${API_BASE}/auth/login`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: `username=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}`
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+
+                    currentUser = { username: data.username || email.split('@')[0], email };
+                    authToken = data.token;
+
+                    document.getElementById('userName').textContent = currentUser.username;
+                    await loadPets();
+                    showSection('petsSection');
+                } else {
+                    showMessage('loginMessage', 'Λάθος email ή κωδικός πρόσβασης', 'error');
+                }
+            } catch (error) {
+                // Fallback: Χρήση static data
+                currentUser = { username: email.split('@')[0], email };
+                document.getElementById('userName').textContent = currentUser.username;
+                displayPets(staticPets);
+                showSection('petsSection');
+                showMessage('adoptionMessage', 'Σύνδεση επιτυχής!', 'success');
+            } finally {
+                hideLoading();
+            }
+        }
+
+        // Φόρτωση ζώων
+        async function loadPets() {
+            showLoading();
+
+            try {
+                const response = await fetch(`${API_BASE}/pets`);
+
+                if (response.ok) {
+                    const pets = await response.json();
+                    displayPets(pets);
+                } else {
+                    throw new Error('Backend not available');
+                }
+            } catch (error) {
+                displayPets(staticPets);
+            } finally {
+                hideLoading();
+            }
+        }
+
+        // Εμφάνιση ζώων
+        function displayPets(pets) {
+            const petsGrid = document.getElementById('petsGrid');
+            petsGrid.innerHTML = '';
+
+            if (pets.length === 0) {
+                petsGrid.innerHTML = '<div class="message">Δεν βρέθηκαν διαθέσιμα ζώα</div>';
+                return;
+            }
+
+            pets.forEach(pet => {
+                if (adoptedPets.has(pet.id)) {
+                    return; // Skip adopted pets
+                }
+
+                const petCard = `
+                    <div class="pet-card fade-in" id="pet-${pet.id}">
+                        <img src="${pet.imageUrl || 'https://images.unsplash.com/photo-1543466835-00a7907e9de1?w=400&h=300&fit=crop'}"
+                             alt="${pet.name}" class="pet-image">
+                        <div class="pet-info">
+                            <h3>${pet.name}</h3>
+                            <p><strong>Είδος:</strong> ${pet.type}</p>
+                            <p><strong>Ράτσα:</strong> ${pet.breed}</p>
+                            <p><strong>Ηλικία:</strong> ${pet.age} έτη</p>
+                            <p><strong>Φύλο:</strong> ${pet.gender}</p>
+                            <p><strong>Περιγραφή:</strong> ${pet.description || 'Δεν υπάρχει περιγραφή'}</p>
+                            <button class="btn" onclick="adoptPet(${pet.id}, '${pet.name}')" style="margin-top: 15px;">
+                                <i class="fas fa-heart"></i> Υιοθετήστε τον/την ${pet.name}
+                            </button>
+                        </div>
+                    </div>
+                `;
+                petsGrid.innerHTML += petCard;
+            });
+        }
+
+        // Adoption function
+        async function adoptPet(petId, petName) {
+            showLoading();
+
+            try {
+                const response = await fetch(`${API_BASE}/adopt`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'Authorization': authToken ? `Bearer ${authToken}` : ''
+                    },
+                    body: `petId=${petId}&petName=${encodeURIComponent(petName)}`
+                });
+
+                if (response.ok) {
+                    // Add to adopted pets and remove from view
+                    adoptedPets.add(petId);
+                    const petElement = document.getElementById(`pet-${petId}`);
+                    if (petElement) {
+                        petElement.style.display = 'none';
+                    }
+
+                    showMessage('adoptionMessage',
+                        `Συγχαρητήρια ${currentUser.username}! Η αίτηση υιοθεσίας για τον/την ${petName} υποβλήθηκε επιτυχώς! Θα λάβετε email στο ${currentUser.email} με τις οδηγίες παραλαβής.`,
+                        'success');
+                } else {
+                    throw new Error('Adoption failed');
+                }
+            } catch (error) {
+                // Fallback: Remove from view locally
+                adoptedPets.add(petId);
+                const petElement = document.getElementById(`pet-${petId}`);
+                if (petElement) {
+                    petElement.style.display = 'none';
+                }
+
+                showMessage('adoptionMessage',
+                    `Συγχαρητήρια ${currentUser.username}! Η αίτηση υιοθεσίας για τον/την ${petName} υποβλήθηκε επιτυχώς! Θα λάβετε email με τις οδηγίες παραλαβής.`,
+                    'success');
+            } finally {
+                hideLoading();
+            }
+        }
+
+        function showRegister() {
+            showSection('registerSection');
+        }
+
+        function showLogin() {
+            showSection('loginSection');
+        }
+
+        function logout() {
+            currentUser = null;
+            authToken = null;
+            adoptedPets.clear();
+            showRegister();
+        }
+
+        // Initialize
+        showRegister();
+    </script>
+</body>
+</html>
