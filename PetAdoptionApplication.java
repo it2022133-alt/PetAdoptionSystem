@@ -20,7 +20,6 @@ import org.springframework.stereotype.Repository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
-// ===== ΚΥΡΙΑ ΕΦΑΡΜΟΓΗ =====
 @SpringBootApplication
 public class PetAdoptionApplication {
     public static void main(String[] args) {
@@ -33,7 +32,7 @@ public class PetAdoptionApplication {
     }
 }
 
-// ===== ΜΟΝΤΕΛΑ =====
+
 @Entity
 @Table(name = "users")
 class User {
@@ -161,7 +160,7 @@ class AdoptionRequest {
     public void setStatus(String status) { this.status = status; }
 }
 
-// ===== REPOSITORIES =====
+
 @Repository
 interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByUsername(String username);
@@ -182,7 +181,7 @@ interface AdoptionRequestRepository extends JpaRepository<AdoptionRequest, Long>
     Optional<AdoptionRequest> findByUserEmailAndPetId(String userEmail, Long petId);
 }
 
-// ===== SERVICES =====
+
 @Service
 class UserService {
     @Autowired
@@ -306,7 +305,7 @@ class JwtUtils {
     }
 }
 
-// ===== REST CONTROLLERS =====
+
 @RestController
 @RequestMapping("/api/auth")
 class AuthController {
@@ -332,7 +331,7 @@ class AuthController {
                                 "email", user.getEmail()
                         ));
             } else {
-                return ResponseEntity.status(401).body("Λάθος όνομα χρήστη ή κωδικός πρόσβασης");
+                return ResponseEntity.status(401).body("Λάθος όνομα χρήστη ή κωδικου πρόσβασης");
             }
         } catch (Exception e) {
             return ResponseEntity.status(500).body("Σφάλμα κατά τη σύνδεση: " + e.getMessage());
@@ -367,7 +366,7 @@ class UserRestController {
                     "email", newUser.getEmail()
             ));
         } catch (Exception e) {
-            return ResponseEntity.status(500).body("Σφάλμα κατά την εγγραφή: " + e.getMessage());
+            return ResponseEntity.status(500).body("Σφάλμα στην εγγραφή: " + e.getMessage());
         }
     }
 }
@@ -431,12 +430,12 @@ class AdoptionController {
                     "requestId", request.getId()
             ));
         } catch (Exception e) {
-            return ResponseEntity.status(500).body("Σφάλμα κατά την υποβολή αίτησης: " + e.getMessage());
+            return ResponseEntity.status(500).body("Σφάλμα στην υποβολή αίτησης: " + e.getMessage());
         }
     }
 }
 
-// ===== DATA INITIALIZATION =====
+
 @Component
 class DataLoader implements CommandLineRunner {
     @Autowired
@@ -458,7 +457,7 @@ class DataLoader implements CommandLineRunner {
             userRepository.save(admin);
         }
 
-        // Δημιουργία δοκιμαστικών κατοικίδιων (μόνο 2 όπως ζητήθηκε)
+    
         if (petRepository.count() == 0) {
             Pet pet1 = new Pet();
             pet1.setName("Buddy");
